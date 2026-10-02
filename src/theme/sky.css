@@ -1,0 +1,129 @@
+/* Sky tokens — the atmospheric identity.
+   Each [data-sky] token defines gradient stops plus its own contrast pair set,
+   so text contrast is defined per gradient, not per component.
+
+   Contrast rules (PRD accessibility requirements):
+   - --on-sky (hero, labels outside cards) ≥ 3:1 as large text against the band
+     where it renders (upper/middle); the hero adds a text-shadow for insurance.
+   - Body text lives on cards, whose translucent dark overlay (--card-bg)
+     composited over the gradient keeps --card-text ≥ 4.5:1 on every token. */
+
+/* Clear morning — pale blue with a warm sunlight tint */
+[data-sky="clear-morning"] {
+  --sky-top: #4a79ad;
+  --sky-mid: #7399c4;
+  --sky-bottom: #a4bfd9;
+  --on-sky: #ffffff;
+  --on-sky-muted: rgba(255, 255, 255, 0.78);
+  --card-bg: rgba(18, 34, 58, 0.26);
+  --card-border: rgba(255, 255, 255, 0.22);
+  --card-text: #ffffff;
+  --card-text-muted: rgba(255, 255, 255, 0.7);
+  --accent: #ffe3a9;
+}
+
+/* Clear day — bright sky blue */
+[data-sky="clear-day"] {
+  --sky-top: #2f6cb3;
+  --sky-mid: #5b93d0;
+  --sky-bottom: #8fb6dd;
+  --on-sky: #ffffff;
+  --on-sky-muted: rgba(255, 255, 255, 0.78);
+  --card-bg: rgba(18, 34, 58, 0.24);
+  --card-border: rgba(255, 255, 255, 0.22);
+  --card-text: #ffffff;
+  --card-text-muted: rgba(255, 255, 255, 0.7);
+  --accent: #ffffff;
+}
+
+/* Clear evening — deeper blue/purple gradient */
+[data-sky="clear-evening"] {
+  --sky-top: #2b2a55;
+  --sky-mid: #4a3d7a;
+  --sky-bottom: #8a6aa8;
+  --on-sky: #ffffff;
+  --on-sky-muted: rgba(255, 255, 255, 0.75);
+  --card-bg: rgba(16, 16, 40, 0.3);
+  --card-border: rgba(255, 255, 255, 0.2);
+  --card-text: #ffffff;
+  --card-text-muted: rgba(255, 255, 255, 0.68);
+  --accent: #ffc9a3;
+}
+
+/* Night — navy gradient (driven by the API's is_day, not OS dark mode) */
+[data-sky="night"] {
+  --sky-top: #0b1026;
+  --sky-mid: #1b2340;
+  --sky-bottom: #2e3654;
+  --on-sky: #ffffff;
+  --on-sky-muted: rgba(255, 255, 255, 0.72);
+  --card-bg: rgba(6, 10, 26, 0.34);
+  --card-border: rgba(255, 255, 255, 0.16);
+  --card-text: #ffffff;
+  --card-text-muted: rgba(255, 255, 255, 0.66);
+  --accent: #b9c7ff;
+}
+
+/* Rain — cool desaturated blue */
+[data-sky="rain"] {
+  --sky-top: #3a4a5e;
+  --sky-mid: #51647b;
+  --sky-bottom: #6d8098;
+  --on-sky: #ffffff;
+  --on-sky-muted: rgba(255, 255, 255, 0.76);
+  --card-bg: rgba(12, 22, 36, 0.3);
+  --card-border: rgba(255, 255, 255, 0.2);
+  --card-text: #ffffff;
+  --card-text-muted: rgba(255, 255, 255, 0.68);
+  --accent: #a9d4ff;
+}
+
+/* Cloudy — grey-blue */
+[data-sky="cloudy"] {
+  --sky-top: #55616e;
+  --sky-mid: #6e7b89;
+  --sky-bottom: #8d9aa7;
+  --on-sky: #ffffff;
+  --on-sky-muted: rgba(255, 255, 255, 0.8);
+  --card-bg: rgba(20, 28, 38, 0.28);
+  --card-border: rgba(255, 255, 255, 0.22);
+  --card-text: #ffffff;
+  --card-text-muted: rgba(255, 255, 255, 0.72);
+  --accent: #ffffff;
+}
+
+/* Snow — icy pale blue */
+[data-sky="snow"] {
+  --sky-top: #5d7189;
+  --sky-mid: #7f93ab;
+  --sky-bottom: #a3b6c9;
+  --on-sky: #ffffff;
+  --on-sky-muted: rgba(255, 255, 255, 0.82);
+  --card-bg: rgba(24, 36, 52, 0.26);
+  --card-border: rgba(255, 255, 255, 0.24);
+  --card-text: #ffffff;
+  --card-text-muted: rgba(255, 255, 255, 0.74);
+  --accent: #dff1ff;
+}
+
+/* Fog — muted grey-blue haze */
+[data-sky="fog"] {
+  --sky-top: #6e7b87;
+  --sky-mid: #8a959f;
+  --sky-bottom: #a7b1ba;
+  --on-sky: #ffffff;
+  --on-sky-muted: rgba(255, 255, 255, 0.8);
+  --card-bg: rgba(28, 34, 42, 0.26);
+  --card-border: rgba(255, 255, 255, 0.22);
+  --card-text: #ffffff;
+  --card-text-muted: rgba(255, 255, 255, 0.72);
+  --accent: #ffffff;
+}
+
+/* Temperature range bar: cool → warm, independent of the sky token */
+:root {
+  --range-cool: #6fb7e8;
+  --range-mid: #8fc9e0;
+  --range-warm: #f0a35e;
+  --range-hot: #e8734f;
+}

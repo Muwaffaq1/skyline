@@ -1,0 +1,117 @@
+/* Reset + app frame. The app is a single 390px-oriented column over a
+   fixed full-bleed sky; .app-scroll owns the scroll so refresh-driven
+   re-renders never reset scroll position (PRD returning-user flow). */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family:
+    "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  font-size: var(--text-body);
+  line-height: 1.45;
+  color: var(--on-sky, #ffffff);
+  background-color: #2f4a6b; /* fallback while the sky layer paints */
+  height: 100dvh;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+input {
+  font: inherit;
+  color: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+.app-frame {
+  position: relative;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* Full-bleed sky behind everything */
+.sky {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.sky-layer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    var(--sky-top) 0%,
+    var(--sky-mid) 55%,
+    var(--sky-bottom) 100%
+  );
+  animation: sky-fade-in var(--transition-sky) ease both;
+}
+
+@keyframes sky-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sky-layer {
+    animation: none;
+  }
+}
+
+/* Content column: phone-oriented, scrollable */
+.app-scroll {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  padding: calc(env(safe-area-inset-top, 0px) + var(--space-5))
+    var(--page-gutter) calc(env(safe-area-inset-bottom, 0px) + var(--space-5));
+  scrollbar-width: none;
+}
+
+.app-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 480px) {
+  /* Desktop browsers: keep the phone column centered, edge-to-edge sky */
+  .app-scroll {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+}
+
+/* Focus visibility for keyboard users */
+:focus-visible {
+  outline: 2px solid var(--accent, #ffffff);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

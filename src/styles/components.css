@@ -1,20 +1,21 @@
 /* Component styles — BEM-ish, all colors come from sky tokens so the same
-   classes work under every atmospheric gradient. */
+   classes work under every atmospheric token. Design language: ink on paper —
+   solid cards, monospace metadata, display numerals, one vivid accent. */
 
-/* ---------- Cards (frosted glass) ---------- */
+/* ---------- Cards (solid paper, hairline ink border) ---------- */
 .card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--radius-card);
-  backdrop-filter: var(--blur-card);
-  -webkit-backdrop-filter: var(--blur-card);
+  box-shadow: var(--card-shadow);
   color: var(--card-text);
 }
 
 .section-heading {
+  font-family: var(--font-mono);
   font-size: var(--text-micro);
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--on-sky-muted);
   margin-bottom: var(--space-2);
@@ -40,9 +41,12 @@
 }
 
 .location-header__city {
+  font-family: var(--font-mono);
   font-size: var(--text-city);
-  font-weight: 500;
-  letter-spacing: 0.01em;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em; /* re-centers text that trailing tracking pushes left */
+  text-transform: uppercase;
 }
 
 .location-header__glyph {
@@ -78,8 +82,11 @@
   border-radius: 999px;
   padding: 4px 14px;
   min-height: 32px;
-  font-size: var(--text-small);
-  font-weight: 500;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   white-space: nowrap;
   cursor: pointer;
 }
@@ -97,41 +104,53 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: var(--space-5) 0 var(--space-6);
+  padding: var(--space-4) 0 var(--space-6);
   color: var(--on-sky);
 }
 
 .hero__icon {
   color: var(--on-sky);
-  margin-bottom: var(--space-1);
+  margin-bottom: var(--space-2);
 }
 
+/* The display numeral — the strongest element on the screen. A stepped
+   text-shadow gives a subtle extruded depth, honoring the 3D-numeral look. */
 .hero__temp {
+  font-family: var(--font-display);
   font-size: var(--text-hero);
-  font-weight: 250;
-  line-height: 1;
-  letter-spacing: -0.02em;
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums;
-  text-shadow: var(--hero-shadow);
+  text-shadow:
+    0 0.018em 0 rgba(0, 0, 0, 0.22),
+    0 0.036em 0 rgba(0, 0, 0, 0.14),
+    0 0.07em 0.09em rgba(0, 0, 0, 0.22);
 }
 
 .hero__condition {
   font-size: var(--text-condition);
-  font-weight: 500;
-  margin-top: var(--space-2);
-  text-shadow: var(--hero-shadow);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin-top: var(--space-3);
 }
 
 .hero__highlow {
-  font-size: var(--text-body);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--on-sky-muted);
-  margin-top: var(--space-1);
+  margin-top: var(--space-2);
   font-variant-numeric: tabular-nums;
-  text-shadow: var(--hero-shadow);
 }
 
 .hero__feels {
-  font-size: var(--text-small);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--on-sky-muted);
   margin-top: var(--space-1);
 }
@@ -141,9 +160,12 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  font-size: var(--text-small);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--on-sky-muted);
-  margin-bottom: var(--space-1);
+  margin-bottom: var(--space-2);
 }
 
 .hero__reset {
@@ -152,21 +174,22 @@
   color: var(--on-sky);
   border-radius: 999px;
   padding: 2px 10px;
+  font-family: var(--font-mono);
   font-size: var(--text-micro);
-  font-weight: 600;
+  font-weight: 700;
   min-height: 28px;
   cursor: pointer;
 }
 
 /* ---------- Hourly strip ---------- */
 .hourly-card {
-  padding: var(--space-4);
+  padding: var(--space-4) var(--space-3);
   margin-bottom: var(--space-4);
 }
 
 .hourly-strip {
   display: flex;
-  gap: var(--space-2);
+  gap: 0;
   overflow-x: auto;
   scroll-snap-type: x proximity;
   scrollbar-width: none;
@@ -186,7 +209,7 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-1);
-  border-radius: var(--radius-input);
+  border-radius: 0;
   background: transparent;
   border: none;
   color: inherit;
@@ -196,28 +219,37 @@
   transition: background var(--transition-ui);
 }
 
-/* Rain window: contiguous ≥50% hours read as one shaded band. */
-.hourly-cell--rain {
-  background: color-mix(in srgb, var(--accent) 16%, transparent);
+.hourly-cell:first-child {
+  border-radius: var(--radius-pill) 0 0 var(--radius-pill);
 }
 
-/* Scrubbed hour: inverted pill. */
+.hourly-cell:last-child {
+  border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
+}
+
+/* Rain window: contiguous ≥50% hours read as one shaded band. */
+.hourly-cell--rain {
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+/* Scrubbed hour: accent-filled chip (per-token --accent-ink keeps contrast). */
 .hourly-cell--active {
-  background: var(--card-text);
+  background: var(--accent);
+  border-radius: var(--radius-pill);
 }
 
 .hourly-cell--active .hourly-time,
 .hourly-cell--active .hourly-temp,
 .hourly-cell--active .hourly-trend {
-  color: var(--card-bg);
+  color: var(--accent-ink, var(--card-bg));
 }
 
 .hourly-cell--active .hourly-icon {
-  color: var(--card-bg);
+  color: var(--accent-ink, var(--card-bg));
 }
 
 .hourly-cell--active .hourly-precip {
-  color: var(--card-bg);
+  color: var(--accent-ink, var(--card-bg));
 }
 
 .hourly-cell--now .hourly-time {
@@ -225,8 +257,11 @@
 }
 
 .hourly-time {
-  font-size: var(--text-small);
-  font-weight: 500;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   color: var(--card-text);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -234,7 +269,7 @@
 
 .hourly-sun {
   color: var(--accent);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .hourly-icon {
@@ -244,7 +279,7 @@
 
 .hourly-temp {
   font-size: var(--text-body);
-  font-weight: 600;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
@@ -257,9 +292,10 @@
 }
 
 .hourly-precip {
+  font-family: var(--font-mono);
   font-size: var(--text-micro);
-  font-weight: 600;
-  color: var(--accent, #a9d4ff);
+  font-weight: 700;
+  color: var(--accent, #2f8fe0);
   min-height: 1em;
   font-variant-numeric: tabular-nums;
 }
@@ -270,9 +306,12 @@
   justify-content: center;
   gap: 2px;
   margin-top: var(--space-2);
-  padding-top: var(--space-2);
-  border-top: 1px solid var(--card-border);
-  font-size: var(--text-small);
+  padding-top: var(--space-3);
+  border-top: 1px dotted var(--card-border);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--card-text-muted);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -280,32 +319,45 @@
 
 /* ---------- Skyline brief ---------- */
 .skyline-brief {
-  font-size: var(--text-small);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--on-sky-muted);
   text-align: center;
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
   padding: 0 var(--space-2);
+  line-height: 1.6;
 }
 
 /* ---------- Contextual insight card ---------- */
 .insight-card {
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-3) var(--space-4) var(--space-4);
   margin-bottom: var(--space-4);
 }
 
+/* Ink title bar — solid pill with inverted mono label, data-table style. */
 .insight-card__title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--card-text);
+  color: var(--card-bg);
+  font-family: var(--font-mono);
   font-size: var(--text-micro);
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: var(--space-1);
+  border-radius: var(--radius-pill);
+  padding: 5px 12px;
+  margin: calc(-1 * var(--space-2)) 0 var(--space-2);
 }
 
 .insight-card__body {
   font-size: var(--text-body);
   color: var(--card-text);
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 /* ---------- Notifications ---------- */
@@ -325,15 +377,14 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  background: var(--card-bg);
-  backdrop-filter: var(--blur-card);
-  -webkit-backdrop-filter: var(--blur-card);
-  border: 1px solid var(--card-border);
+  background: var(--card-text);
+  border: none;
   border-radius: var(--radius-card);
   padding: var(--space-3) var(--space-4);
-  color: var(--card-text);
+  color: var(--card-bg);
   text-align: left;
   cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   animation: toast-in 240ms ease-out;
 }
 
@@ -349,14 +400,17 @@
 }
 
 .toast__title {
-  font-size: var(--text-small);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
   font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--accent);
 }
 
 .toast__body {
   font-size: var(--text-small);
-  color: var(--card-text);
+  color: var(--card-bg);
 }
 
 /* One-line opt-in row above the footer — shown only while permission is
@@ -367,7 +421,9 @@
   justify-content: space-between;
   gap: var(--space-2);
   margin: 0 var(--space-2) var(--space-3);
-  font-size: var(--text-small);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: 0.04em;
   color: var(--on-sky-muted);
 }
 
@@ -384,8 +440,11 @@
   border-radius: 999px;
   padding: 4px 12px;
   min-height: 32px;
+  font-family: var(--font-mono);
   font-size: var(--text-micro);
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   cursor: pointer;
 }
 
@@ -409,7 +468,7 @@
   min-height: var(--tap-min);
   width: 100%;
   padding: var(--space-2) 0;
-  border-top: 1px solid var(--card-border);
+  border-top: 1px dotted var(--card-border);
   text-align: left;
 }
 
@@ -419,13 +478,16 @@
 
 .daily-day {
   grid-area: day;
-  font-size: var(--text-body);
-  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   font-variant-numeric: tabular-nums;
 }
 
 .daily-row--today .daily-day {
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .daily-icon {
@@ -448,9 +510,10 @@
 
 .daily-precip {
   grid-area: precip;
+  font-family: var(--font-mono);
   font-size: var(--text-micro);
-  font-weight: 600;
-  color: var(--accent, #a9d4ff);
+  font-weight: 700;
+  color: var(--accent, #2f8fe0);
   text-align: right;
   min-height: 1em;
   font-variant-numeric: tabular-nums;
@@ -462,6 +525,7 @@
   align-items: center;
   gap: var(--space-2);
   font-size: var(--text-small);
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
@@ -481,7 +545,7 @@
   flex: 1;
   height: 6px;
   border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.14);
+  background: color-mix(in srgb, var(--card-text) 12%, transparent);
   position: relative;
   overflow: hidden;
 }
@@ -511,7 +575,9 @@
 }
 
 .updated-footer {
-  font-size: var(--text-small);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: 0.04em;
   color: var(--on-sky-muted);
   min-height: var(--tap-min);
   display: inline-flex;
@@ -554,15 +620,16 @@
   min-height: var(--tap-min);
   min-width: 44px;
   padding: 0 var(--space-3);
+  font-family: var(--font-mono);
   font-size: var(--text-small);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--on-sky-muted);
   transition: background var(--transition-ui), color var(--transition-ui);
 }
 
 .unit-toggle__btn[aria-pressed="true"] {
-  background: var(--on-sky);
-  color: #1b2434;
+  background: var(--card-text);
+  color: var(--card-bg);
 }
 
 /* ---------- Status: degraded banner / empty state / retry ---------- */
@@ -572,13 +639,13 @@
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
   margin-bottom: var(--space-4);
-  font-size: var(--text-small);
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius-card);
-  backdrop-filter: var(--blur-card);
-  -webkit-backdrop-filter: var(--blur-card);
-  color: var(--card-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: 0.03em;
+  background: var(--card-text);
+  border: none;
+  border-radius: var(--radius-input);
+  color: var(--card-bg);
 }
 
 .banner__text {
@@ -630,8 +697,9 @@
 }
 
 .empty-state__title {
-  font-size: var(--text-title);
-  font-weight: 600;
+  font-size: 1.375rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .empty-state__body,
@@ -655,16 +723,22 @@
   padding: 0 var(--space-6);
   border-radius: var(--radius-pill);
   background: var(--on-sky);
-  color: #1b2434;
-  font-size: var(--text-body);
-  font-weight: 600;
+  color: var(--sky-top);
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .btn-secondary {
   min-height: var(--tap-min);
   padding: 0 var(--space-4);
-  font-size: var(--text-body);
-  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   text-decoration: underline;
   text-underline-offset: 3px;
   color: var(--on-sky);
@@ -750,7 +824,10 @@
 .search-cancel {
   min-height: var(--tap-min);
   padding: 0 var(--space-2);
-  font-weight: 600;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--card-text-muted);
 }
 
@@ -783,7 +860,9 @@
 }
 
 .search-row__region {
+  font-family: var(--font-mono);
   font-size: var(--text-micro);
+  letter-spacing: 0.04em;
   color: var(--card-text-muted);
 }
 
@@ -841,19 +920,23 @@
 }
 
 .first-run__logo {
+  font-family: var(--font-display);
   font-size: var(--text-hero);
-  font-weight: 200;
-  letter-spacing: -0.02em;
-  line-height: 1;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 0.92;
+  text-transform: uppercase;
   margin-bottom: var(--space-2);
-  text-shadow: var(--hero-shadow);
+  text-shadow:
+    0 0.018em 0 rgba(0, 0, 0, 0.22),
+    0 0.036em 0 rgba(0, 0, 0, 0.14),
+    0 0.07em 0.09em rgba(0, 0, 0, 0.22);
 }
 
 .first-run__value {
   font-size: var(--text-condition);
-  font-weight: 500;
+  font-weight: 700;
   max-width: 22ch;
-  text-shadow: var(--hero-shadow);
 }
 
 .first-run__privacy {
@@ -924,13 +1007,14 @@
   gap: 0.375rem;
   padding: 0.3125rem 0.4375rem 0.3125rem 0.75rem;
   border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--card-text);
-  background: var(--card-bg);
-  box-shadow: var(--card-shadow, 0 4px 16px rgba(0, 0, 0, 0.18));
-  backdrop-filter: blur(8px);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--card-bg);
+  background: var(--card-text);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
 }
 
 .demo-chip__exit {
@@ -943,7 +1027,7 @@
   border-radius: 50%;
   font-size: 0.875rem;
   line-height: 1;
-  color: var(--card-text);
+  color: var(--card-bg);
   background: transparent;
   cursor: pointer;
   opacity: 0.7;

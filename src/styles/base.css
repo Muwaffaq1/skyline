@@ -15,13 +15,11 @@ html {
 }
 
 body {
-  font-family:
-    "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-head);
   font-size: var(--text-body);
   line-height: 1.45;
-  color: var(--on-sky, #ffffff);
-  background-color: #2f4a6b; /* fallback while the sky layer paints */
+  color: var(--on-sky, #141414);
+  background-color: #f2f0ec; /* fallback while the sky layer paints */
   height: 100dvh;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;

@@ -1,11 +1,21 @@
 /* Design tokens: type scale (rem — dynamic type friendly), spacing, radii,
-   blur, and the 44px minimum touch target (accessibility requirement). */
+   and the 44px minimum touch target (accessibility requirement).
+
+   V3 "ink on paper" design language: flat atmospheric backgrounds, a giant
+   display numeral, monospace metadata labels, and solid ink chrome instead
+   of frosted glass. Fonts load in index.html (Google Fonts):
+   Anton — display numerals · Archivo — headings/UI · Space Mono — metadata. */
 
 :root {
+  /* Type families */
+  --font-display: "Anton", "Archivo", -apple-system, sans-serif;
+  --font-head: "Archivo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
   /* Type scale */
-  --text-hero: 6rem; /* 96px hero temperature */
-  --text-condition: 1.25rem;
-  --text-city: 1.375rem;
+  --text-hero: 7.5rem; /* 120px display temperature */
+  --text-condition: 1.375rem;
+  --text-city: 0.8125rem;
   --text-title: 1rem;
   --text-body: 0.9375rem;
   --text-small: 0.8125rem;
@@ -21,11 +31,10 @@
   --page-gutter: 20px;
 
   /* Shape & effect */
-  --radius-card: 20px;
+  --radius-card: 22px;
   --radius-input: 14px;
   --radius-pill: 999px;
-  --blur-card: blur(24px) saturate(1.4);
-  --hero-shadow: 0 2px 28px rgba(0, 0, 0, 0.28);
+  --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
 
   /* Accessibility */
   --tap-min: 44px;

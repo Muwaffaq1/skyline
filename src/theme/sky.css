@@ -1,137 +1,150 @@
-/* Sky tokens — the atmospheric identity.
-   Each [data-sky] token defines gradient stops plus its own contrast pair set,
-   so text contrast is defined per gradient, not per component.
+/* Sky tokens — the atmospheric identity, "ink on paper" edition.
+   Inspired by flat, typography-led weather design: each [data-sky] token is a
+   flat paper (light) or ink (dark) background with one vivid accent — never a
+   gradient. --sky-top/mid/bottom stay equal so the crossfade layer still works
+   and the browser chrome color (--sky-top) stays in sync.
 
    Contrast rules (PRD accessibility requirements):
-   - --on-sky (hero, labels outside cards) ≥ 3:1 as large text against the band
-     where it renders (upper/middle); the hero adds a text-shadow for insurance.
-   - Body text lives on cards, whose translucent dark overlay (--card-bg)
-     composited over the gradient keeps --card-text ≥ 4.5:1 on every token. */
+   - --on-sky (ink) ≥ 7:1 against its paper in light tokens, ≥ 12:1 white on
+     ink in dark tokens.
+   - Body text lives on cards: --card-text against --card-bg ≥ 4.5:1 on every
+     token.
+   - --accent-ink is the text color to use ON an accent-filled element
+     (active hour chip), defined per token. */
 
-/* Clear morning — pale blue with a warm sunlight tint */
+/* Clear morning — warm paper, red-sun accent */
 [data-sky="clear-morning"] {
-  --sky-top: #4a79ad;
-  --sky-mid: #7399c4;
-  --sky-bottom: #a4bfd9;
-  --on-sky: #ffffff;
-  --on-sky-muted: rgba(255, 255, 255, 0.78);
-  --card-bg: rgba(18, 34, 58, 0.26);
-  --card-border: rgba(255, 255, 255, 0.22);
-  --card-text: #ffffff;
-  --card-text-muted: rgba(255, 255, 255, 0.7);
-  --accent: #ffe3a9;
+  --sky-top: #f1ede4;
+  --sky-mid: #f1ede4;
+  --sky-bottom: #eae5d9;
+  --on-sky: #141414;
+  --on-sky-muted: rgba(20, 20, 20, 0.55);
+  --card-bg: #ffffff;
+  --card-border: rgba(20, 20, 20, 0.14);
+  --card-text: #141414;
+  --card-text-muted: rgba(20, 20, 20, 0.55);
+  --accent: #e8452c;
+  --accent-ink: #ffffff;
 }
 
-/* Clear day — bright sky blue */
+/* Clear day — clean paper, red-sun accent */
 [data-sky="clear-day"] {
-  --sky-top: #2f6cb3;
-  --sky-mid: #5b93d0;
-  --sky-bottom: #8fb6dd;
-  --on-sky: #ffffff;
-  --on-sky-muted: rgba(255, 255, 255, 0.78);
-  --card-bg: rgba(18, 34, 58, 0.24);
-  --card-border: rgba(255, 255, 255, 0.22);
-  --card-text: #ffffff;
-  --card-text-muted: rgba(255, 255, 255, 0.7);
-  --accent: #ffffff;
+  --sky-top: #f2f0ec;
+  --sky-mid: #f2f0ec;
+  --sky-bottom: #ecebe6;
+  --on-sky: #141414;
+  --on-sky-muted: rgba(20, 20, 20, 0.55);
+  --card-bg: #ffffff;
+  --card-border: rgba(20, 20, 20, 0.14);
+  --card-text: #141414;
+  --card-text-muted: rgba(20, 20, 20, 0.55);
+  --accent: #e8452c;
+  --accent-ink: #ffffff;
 }
 
-/* Clear evening — deeper blue/purple gradient */
+/* Clear evening — deep ink, dusk lavender accent */
 [data-sky="clear-evening"] {
-  --sky-top: #2b2a55;
-  --sky-mid: #4a3d7a;
-  --sky-bottom: #8a6aa8;
-  --on-sky: #ffffff;
-  --on-sky-muted: rgba(255, 255, 255, 0.75);
-  --card-bg: rgba(16, 16, 40, 0.3);
-  --card-border: rgba(255, 255, 255, 0.2);
-  --card-text: #ffffff;
-  --card-text-muted: rgba(255, 255, 255, 0.68);
-  --accent: #ffc9a3;
+  --sky-top: #211d29;
+  --sky-mid: #211d29;
+  --sky-bottom: #191621;
+  --on-sky: #f5f4f1;
+  --on-sky-muted: rgba(245, 244, 241, 0.6);
+  --card-bg: #2b2733;
+  --card-border: rgba(245, 244, 241, 0.16);
+  --card-text: #f5f4f1;
+  --card-text-muted: rgba(245, 244, 241, 0.6);
+  --accent: #ffb86b;
+  --accent-ink: #211d29;
 }
 
-/* Clear golden hour — warm amber/peach, ±45 min around sunrise/sunset */
+/* Clear golden hour — warm paper, deep orange accent */
 [data-sky="clear-golden"] {
-  --sky-top: #b3543f;
-  --sky-mid: #d97e4e;
-  --sky-bottom: #f2b56b;
-  --on-sky: #ffffff;
-  --on-sky-muted: rgba(255, 255, 255, 0.82);
-  --card-bg: rgba(40, 20, 10, 0.3);
-  --card-border: rgba(255, 255, 255, 0.26);
-  --card-text: #ffffff;
-  --card-text-muted: rgba(255, 255, 255, 0.76);
-  --accent: #ffe9c4;
+  --sky-top: #f4ecdc;
+  --sky-mid: #f4ecdc;
+  --sky-bottom: #eee2cb;
+  --on-sky: #1c1408;
+  --on-sky-muted: rgba(28, 20, 8, 0.55);
+  --card-bg: #fffdf8;
+  --card-border: rgba(28, 20, 8, 0.16);
+  --card-text: #1c1408;
+  --card-text-muted: rgba(28, 20, 8, 0.55);
+  --accent: #cf4b21;
+  --accent-ink: #ffffff;
 }
 
-/* Night — navy gradient (driven by the API's is_day, not OS dark mode) */
+/* Night — near-black ink, pale blue accent */
 [data-sky="night"] {
-  --sky-top: #0b1026;
-  --sky-mid: #1b2340;
-  --sky-bottom: #2e3654;
-  --on-sky: #ffffff;
-  --on-sky-muted: rgba(255, 255, 255, 0.72);
-  --card-bg: rgba(6, 10, 26, 0.34);
-  --card-border: rgba(255, 255, 255, 0.16);
-  --card-text: #ffffff;
-  --card-text-muted: rgba(255, 255, 255, 0.66);
-  --accent: #b9c7ff;
+  --sky-top: #17181d;
+  --sky-mid: #17181d;
+  --sky-bottom: #131418;
+  --on-sky: #f5f4f1;
+  --on-sky-muted: rgba(245, 244, 241, 0.6);
+  --card-bg: #232429;
+  --card-border: rgba(245, 244, 241, 0.16);
+  --card-text: #f5f4f1;
+  --card-text-muted: rgba(245, 244, 241, 0.6);
+  --accent: #8ea6ff;
+  --accent-ink: #17181d;
 }
 
-/* Rain — cool desaturated blue */
+/* Rain — dark ink, downpour blue accent */
 [data-sky="rain"] {
-  --sky-top: #3a4a5e;
-  --sky-mid: #51647b;
-  --sky-bottom: #6d8098;
-  --on-sky: #ffffff;
-  --on-sky-muted: rgba(255, 255, 255, 0.76);
-  --card-bg: rgba(12, 22, 36, 0.3);
-  --card-border: rgba(255, 255, 255, 0.2);
-  --card-text: #ffffff;
-  --card-text-muted: rgba(255, 255, 255, 0.68);
-  --accent: #a9d4ff;
+  --sky-top: #1b1e23;
+  --sky-mid: #1b1e23;
+  --sky-bottom: #16181d;
+  --on-sky: #f5f4f1;
+  --on-sky-muted: rgba(245, 244, 241, 0.6);
+  --card-bg: #26292f;
+  --card-border: rgba(245, 244, 241, 0.16);
+  --card-text: #f5f4f1;
+  --card-text-muted: rgba(245, 244, 241, 0.6);
+  --accent: #4db2ff;
+  --accent-ink: #10141a;
 }
 
-/* Cloudy — grey-blue */
+/* Cloudy — cool light paper, signal blue accent */
 [data-sky="cloudy"] {
-  --sky-top: #55616e;
-  --sky-mid: #6e7b89;
-  --sky-bottom: #8d9aa7;
-  --on-sky: #ffffff;
-  --on-sky-muted: rgba(255, 255, 255, 0.8);
-  --card-bg: rgba(20, 28, 38, 0.28);
-  --card-border: rgba(255, 255, 255, 0.22);
-  --card-text: #ffffff;
-  --card-text-muted: rgba(255, 255, 255, 0.72);
-  --accent: #ffffff;
+  --sky-top: #ececea;
+  --sky-mid: #ececea;
+  --sky-bottom: #e4e4e1;
+  --on-sky: #141414;
+  --on-sky-muted: rgba(20, 20, 20, 0.55);
+  --card-bg: #ffffff;
+  --card-border: rgba(20, 20, 20, 0.14);
+  --card-text: #141414;
+  --card-text-muted: rgba(20, 20, 20, 0.55);
+  --accent: #2f8fe0;
+  --accent-ink: #ffffff;
 }
 
-/* Snow — icy pale blue */
+/* Snow — icy pale paper, blue accent */
 [data-sky="snow"] {
-  --sky-top: #5d7189;
-  --sky-mid: #7f93ab;
-  --sky-bottom: #a3b6c9;
-  --on-sky: #ffffff;
-  --on-sky-muted: rgba(255, 255, 255, 0.82);
-  --card-bg: rgba(24, 36, 52, 0.26);
-  --card-border: rgba(255, 255, 255, 0.24);
-  --card-text: #ffffff;
-  --card-text-muted: rgba(255, 255, 255, 0.74);
-  --accent: #dff1ff;
+  --sky-top: #edf1f4;
+  --sky-mid: #edf1f4;
+  --sky-bottom: #e4eaef;
+  --on-sky: #14202b;
+  --on-sky-muted: rgba(20, 32, 43, 0.55);
+  --card-bg: #ffffff;
+  --card-border: rgba(20, 32, 43, 0.14);
+  --card-text: #14202b;
+  --card-text-muted: rgba(20, 32, 43, 0.55);
+  --accent: #2f8fe0;
+  --accent-ink: #ffffff;
 }
 
-/* Fog — muted grey-blue haze */
+/* Fog — muted grey paper, slate accent */
 [data-sky="fog"] {
-  --sky-top: #6e7b87;
-  --sky-mid: #8a959f;
-  --sky-bottom: #a7b1ba;
-  --on-sky: #ffffff;
-  --on-sky-muted: rgba(255, 255, 255, 0.8);
-  --card-bg: rgba(28, 34, 42, 0.26);
-  --card-border: rgba(255, 255, 255, 0.22);
-  --card-text: #ffffff;
-  --card-text-muted: rgba(255, 255, 255, 0.72);
-  --accent: #ffffff;
+  --sky-top: #ebeae8;
+  --sky-mid: #ebeae8;
+  --sky-bottom: #e2e1de;
+  --on-sky: #1a1a1a;
+  --on-sky-muted: rgba(26, 26, 26, 0.5);
+  --card-bg: #f8f8f7;
+  --card-border: rgba(26, 26, 26, 0.14);
+  --card-text: #1a1a1a;
+  --card-text-muted: rgba(26, 26, 26, 0.5);
+  --accent: #4a5568;
+  --accent-ink: #ffffff;
 }
 
 /* Temperature range bar: cool → warm, independent of the sky token */

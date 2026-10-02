@@ -76,9 +76,9 @@
 
 .city-chip {
   flex: 0 0 auto;
-  background: none;
-  border: 1px solid var(--on-sky-muted);
-  color: var(--on-sky-muted);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--card-text);
   border-radius: 999px;
   padding: 4px 14px;
   min-height: 32px;
@@ -89,13 +89,13 @@
   text-transform: uppercase;
   white-space: nowrap;
   cursor: pointer;
+  box-shadow: var(--card-shadow);
 }
 
 .city-chip--active {
-  background: var(--on-sky);
-  border-color: var(--on-sky);
-  color: var(--sky-top);
-  font-weight: 600;
+  background: var(--card-text);
+  border-color: var(--card-text);
+  color: var(--card-bg);
 }
 
 /* ---------- Hero ---------- */
@@ -220,11 +220,11 @@
 }
 
 .hourly-cell:first-child {
-  border-radius: var(--radius-pill) 0 0 var(--radius-pill);
+  border-radius: 0;
 }
 
 .hourly-cell:last-child {
-  border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
+  border-radius: 0;
 }
 
 /* Rain window: contiguous ≥50% hours read as one shaded band. */
@@ -232,10 +232,11 @@
   background: color-mix(in srgb, var(--accent) 22%, transparent);
 }
 
-/* Scrubbed hour: accent-filled chip (per-token --accent-ink keeps contrast). */
+/* Scrubbed hour: accent-filled chip (per-token --accent-ink keeps contrast).
+   Rounded rect, not a full pill — end cells stay balanced with mid-strip ones. */
 .hourly-cell--active {
   background: var(--accent);
-  border-radius: var(--radius-pill);
+  border-radius: 12px;
 }
 
 .hourly-cell--active .hourly-time,
@@ -332,11 +333,12 @@
 
 /* ---------- Contextual insight card ---------- */
 .insight-card {
-  padding: var(--space-3) var(--space-4) var(--space-4);
+  padding: var(--space-4);
   margin-bottom: var(--space-4);
 }
 
-/* Ink title bar — solid pill with inverted mono label, data-table style. */
+/* Ink title bar — solid pill with inverted mono label, data-table style.
+   Sits inset from the card edges with real breathing room above it. */
 .insight-card__title {
   display: flex;
   justify-content: space-between;
@@ -351,7 +353,7 @@
   text-transform: uppercase;
   border-radius: var(--radius-pill);
   padding: 5px 12px;
-  margin: calc(-1 * var(--space-2)) 0 var(--space-2);
+  margin-bottom: var(--space-3);
 }
 
 .insight-card__body {

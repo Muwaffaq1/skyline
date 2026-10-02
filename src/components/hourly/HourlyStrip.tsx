@@ -1,8 +1,8 @@
 // Layer 3 — Hourly forecast + interactive timeline. Horizontal scroll-snap
 // strip covering roughly the next 24 hours (6–8 cells visible, per the PRD).
-// V2 additions: trend arrows (vs the previous cell), rain-window shading,
-// sun markers, and time scrubbing — tapping (or dragging on pointer devices)
-// an hour sets the viewing hour, which repaints the hero and the sky.
+// V2 additions: trend arrows (vs the previous cell), sun markers, and time
+// scrubbing — tapping (or dragging on pointer devices) an hour sets the
+// viewing hour, which repaints the hero and the sky.
 // The scrub selection is a wall-time key, so a background refetch that
 // shifts the slice can't silently point at the wrong hour.
 
@@ -10,7 +10,6 @@ import { useRef } from "react";
 import type { DailyPoint, HourlyPoint, LocalWallTime } from "../../domain/types";
 import { formatHour, locationNow, sameDate, wallKeyOf } from "../../lib/time";
 import { formatTemp, type Unit } from "../../lib/temperature";
-import { findRainWindows, rainWindowIndexSet } from "../../lib/insights/rainWindow";
 import { tempTrend, trendArrow, trendWord } from "../../lib/insights/trend";
 import { WeatherIcon } from "../WeatherIcon";
 import { SunTimes } from "../sun/SunTimes";
@@ -34,8 +33,6 @@ export function HourlyStrip({ hours, unit, daily, utcOffsetSeconds }: HourlyStri
   const drag = useRef<{ startX: number; active: boolean } | null>(null);
 
   if (cells.length === 0) return null;
-
-  const rainCells = rainWindowIndexSet(findRainWindows(cells));
 
   // Sun events per cell date, from the daily section.
   const sunFor = (t: LocalWallTime) => {
@@ -121,7 +118,6 @@ export function HourlyStrip({ hours, unit, daily, utcOffsetSeconds }: HourlyStri
             unit={unit}
             isNow={i === 0}
             prev={i > 0 ? cells[i - 1] : null}
-            rain={rainCells.has(i)}
             active={i === activeIdx}
             sun={sunFor(hour.time)}
             index={i}
@@ -143,14 +139,13 @@ interface HourlyCellProps {
   unit: Unit;
   isNow: boolean;
   prev: HourlyPoint | null;
-  rain: boolean;
   active: boolean;
   sun: { sunrise: LocalWallTime | null; sunset: LocalWallTime | null };
   index: number;
   onSelect: () => void;
 }
 
-function HourlyCell({ hour, unit, isNow, prev, rain, active, sun, index, onSelect }: HourlyCellProps) {
+function HourlyCell({ hour, unit, isNow, prev, active, sun, index, onSelect }: HourlyCellProps) {
   const timeLabel = isNow ? "Now" : formatHour(hour.time);
   const temp = formatTemp(hour.temperatureC!, unit);
   const precip =
@@ -165,7 +160,6 @@ function HourlyCell({ hour, unit, isNow, prev, rain, active, sun, index, onSelec
   const classes = [
     "hourly-cell",
     isNow ? "hourly-cell--now" : "",
-    rain ? "hourly-cell--rain" : "",
     active ? "hourly-cell--active" : "",
   ]
     .filter(Boolean)

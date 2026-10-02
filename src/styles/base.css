@@ -47,6 +47,11 @@ ol {
   position: relative;
   height: 100dvh;
   overflow: hidden;
+  /* The token vars live HERE (data-sky), not on body — so the inherited ink
+     must be set here too. Body's var(--on-sky) fallback can't see these vars
+     and would otherwise hand #141414 to everything that relies on inherited
+     color (e.g. search rows) — invisible on light tokens, broken on dark. */
+  color: var(--on-sky);
 }
 
 /* Full-bleed sky behind everything */

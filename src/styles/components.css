@@ -209,7 +209,9 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-1);
-  border-radius: 0;
+  /* One shared radius for every clickable cell, ends included — the active
+     fill then reads as the same shape wherever it lands in the strip. */
+  border-radius: 12px;
   background: transparent;
   border: none;
   color: inherit;
@@ -219,24 +221,11 @@
   transition: background var(--transition-ui);
 }
 
-.hourly-cell:first-child {
-  border-radius: 0;
-}
-
-.hourly-cell:last-child {
-  border-radius: 0;
-}
-
-/* Rain window: contiguous ≥50% hours read as one shaded band. */
-.hourly-cell--rain {
-  background: color-mix(in srgb, var(--accent) 22%, transparent);
-}
-
 /* Scrubbed hour: accent-filled chip (per-token --accent-ink keeps contrast).
-   Rounded rect, not a full pill — end cells stay balanced with mid-strip ones. */
+   No cell carries a fill until it's tapped — rain windows are communicated by
+   the precip percentages and the insight card, not by cell shading. */
 .hourly-cell--active {
   background: var(--accent);
-  border-radius: 12px;
 }
 
 .hourly-cell--active .hourly-time,

@@ -170,7 +170,9 @@
 
 .daily-row {
   display: grid;
-  grid-template-columns: 3.6em 30px 1fr;
+  /* Label gets its own track (≥4.5em, grows to fit "Partly cloudy") so it
+     never truncates; the icon column stays fixed at 30px. */
+  grid-template-columns: 3.6em minmax(4.5em, max-content) 1fr;
   grid-template-areas:
     "day icon precip"
     "day label temps";
@@ -204,6 +206,7 @@
   color: var(--card-text);
   display: inline-flex;
   align-items: center;
+  justify-self: start;
   gap: var(--space-2);
 }
 
@@ -331,8 +334,8 @@
 }
 
 .unit-toggle__btn[aria-pressed="true"] {
-  background: var(--card-border);
-  color: var(--card-text);
+  background: var(--on-sky);
+  color: #1b2434;
 }
 
 /* ---------- Status: degraded banner / empty state / retry ---------- */

@@ -55,6 +55,42 @@
   height: 14px;
 }
 
+/* ---------- Saved city chips ---------- */
+.city-chips {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 var(--space-2);
+  margin-bottom: var(--space-2);
+  -webkit-overflow-scrolling: touch;
+}
+
+.city-chips::-webkit-scrollbar {
+  display: none;
+}
+
+.city-chip {
+  flex: 0 0 auto;
+  background: none;
+  border: 1px solid var(--on-sky-muted);
+  color: var(--on-sky-muted);
+  border-radius: 999px;
+  padding: 4px 14px;
+  min-height: 32px;
+  font-size: var(--text-small);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.city-chip--active {
+  background: var(--on-sky);
+  border-color: var(--on-sky);
+  color: var(--sky-top);
+  font-weight: 600;
+}
+
 /* ---------- Hero ---------- */
 .hero {
   display: flex;
@@ -100,6 +136,28 @@
   margin-top: var(--space-1);
 }
 
+/* Scrub mode: "Viewing 4 PM · Back to now" row replaces the feels-like line. */
+.hero__viewing {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-small);
+  color: var(--on-sky-muted);
+  margin-bottom: var(--space-1);
+}
+
+.hero__reset {
+  background: none;
+  border: 1px solid var(--on-sky-muted);
+  color: var(--on-sky);
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: var(--text-micro);
+  font-weight: 600;
+  min-height: 28px;
+  cursor: pointer;
+}
+
 /* ---------- Hourly strip ---------- */
 .hourly-card {
   padding: var(--space-4);
@@ -129,6 +187,37 @@
   gap: var(--space-2);
   padding: var(--space-2) var(--space-1);
   border-radius: var(--radius-input);
+  background: transparent;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  touch-action: pan-x;
+  transition: background var(--transition-ui);
+}
+
+/* Rain window: contiguous ≥50% hours read as one shaded band. */
+.hourly-cell--rain {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+/* Scrubbed hour: inverted pill. */
+.hourly-cell--active {
+  background: var(--card-text);
+}
+
+.hourly-cell--active .hourly-time,
+.hourly-cell--active .hourly-temp,
+.hourly-cell--active .hourly-trend {
+  color: var(--card-bg);
+}
+
+.hourly-cell--active .hourly-icon {
+  color: var(--card-bg);
+}
+
+.hourly-cell--active .hourly-precip {
+  color: var(--card-bg);
 }
 
 .hourly-cell--now .hourly-time {
@@ -143,6 +232,11 @@
   white-space: nowrap;
 }
 
+.hourly-sun {
+  color: var(--accent);
+  font-weight: 600;
+}
+
 .hourly-icon {
   color: var(--card-text);
   display: inline-flex;
@@ -154,12 +248,145 @@
   font-variant-numeric: tabular-nums;
 }
 
+.hourly-trend {
+  display: inline-block;
+  margin-left: 3px;
+  font-size: 0.55em;
+  vertical-align: middle;
+  color: var(--card-text-muted);
+}
+
 .hourly-precip {
   font-size: var(--text-micro);
   font-weight: 600;
   color: var(--accent, #a9d4ff);
   min-height: 1em;
   font-variant-numeric: tabular-nums;
+}
+
+/* Sun countdown row — one line under the strip, inside the hourly card. */
+.sun-times {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--card-border);
+  font-size: var(--text-small);
+  color: var(--card-text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ---------- Skyline brief ---------- */
+.skyline-brief {
+  font-size: var(--text-small);
+  color: var(--on-sky-muted);
+  text-align: center;
+  margin-bottom: var(--space-2);
+  padding: 0 var(--space-2);
+}
+
+/* ---------- Contextual insight card ---------- */
+.insight-card {
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.insight-card__title {
+  font-size: var(--text-micro);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--space-1);
+}
+
+.insight-card__body {
+  font-size: var(--text-body);
+  color: var(--card-text);
+  line-height: 1.4;
+}
+
+/* ---------- Notifications ---------- */
+.toast-stack {
+  position: fixed;
+  top: max(env(safe-area-inset-top), 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: min(calc(100% - 2 * var(--page-gutter)), 380px);
+  z-index: 70; /* above the demo chip when both share the top edge */
+}
+
+.toast {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--card-bg);
+  backdrop-filter: var(--blur-card);
+  -webkit-backdrop-filter: var(--blur-card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-3) var(--space-4);
+  color: var(--card-text);
+  text-align: left;
+  cursor: pointer;
+  animation: toast-in 240ms ease-out;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.toast__title {
+  font-size: var(--text-small);
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.toast__body {
+  font-size: var(--text-small);
+  color: var(--card-text);
+}
+
+/* One-line opt-in row above the footer — shown only while permission is
+   "default" and the user hasn't dismissed it. */
+.notification-optin {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin: 0 var(--space-2) var(--space-3);
+  font-size: var(--text-small);
+  color: var(--on-sky-muted);
+}
+
+.notification-optin__actions {
+  display: flex;
+  gap: var(--space-2);
+  flex: 0 0 auto;
+}
+
+.notification-optin__button {
+  background: none;
+  border: 1px solid var(--on-sky-muted);
+  color: var(--on-sky);
+  border-radius: 999px;
+  padding: 4px 12px;
+  min-height: 32px;
+  font-size: var(--text-micro);
+  font-weight: 600;
+  cursor: pointer;
 }
 
 /* ---------- Daily list ---------- */
@@ -571,6 +798,36 @@
   font-weight: 600;
 }
 
+/* Row + trailing star/remove button (saved cities) */
+.search-row-wrap {
+  display: flex;
+  align-items: stretch;
+}
+
+.search-row-wrap .search-row {
+  flex: 1;
+}
+
+.search-row__star {
+  flex: 0 0 auto;
+  width: var(--tap-min);
+  min-height: var(--tap-min);
+  background: none;
+  border: none;
+  font-size: var(--text-body);
+  color: var(--card-text-muted);
+  cursor: pointer;
+}
+
+.search-row__star[aria-pressed="true"] {
+  color: var(--accent);
+}
+
+.search-row__star--remove {
+  font-size: var(--text-body);
+  font-weight: 600;
+}
+
 /* ---------- First run gate ---------- */
 .first-run {
   display: flex;
@@ -644,4 +901,75 @@
     animation: none;
     border-right-color: currentColor;
   }
+}
+
+/* ---- Demo mode ---- */
+
+/* Long-press target: suppress text selection / iOS callout so the gesture
+   doesn't fight the browser. */
+.location-header__city {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.demo-chip {
+  position: fixed;
+  top: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.3125rem 0.4375rem 0.3125rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--card-text);
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow, 0 4px 16px rgba(0, 0, 0, 0.18));
+  backdrop-filter: blur(8px);
+}
+
+.demo-chip__exit {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  font-size: 0.875rem;
+  line-height: 1;
+  color: var(--card-text);
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.demo-chip__exit:hover,
+.demo-chip__exit:focus-visible {
+  opacity: 1;
+}
+
+.demo-sheet__heading {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.demo-sheet__row--active .search-row__city {
+  font-weight: 700;
+}
+
+.demo-sheet__row--active::after {
+  content: "✓";
+  margin-left: auto;
+  font-weight: 700;
+}
+
+.demo-sheet__row--exit {
+  margin-top: 0.25rem;
 }

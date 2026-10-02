@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import type { WeatherLocation } from "../../domain/types";
 import { useDeviceLocation } from "../../hooks/useDeviceLocation";
 import { useLocationSearch } from "../../hooks/useLocationSearch";
+import { useSettings } from "../../store/settings";
 import { SearchResultRow } from "./SearchResultRow";
 import { PopularCities } from "./PopularCities";
 
@@ -21,6 +22,8 @@ export function SearchSheet({ open, onClose, onSelect }: SearchSheetProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const device = useDeviceLocation();
   const results = useLocationSearch(query);
+  const savedCities = useSettings((s) => s.savedCities);
+  const removeLocation = useSettings((s) => s.removeLocation);
 
   // Reset + focus on open. autoFocus alone misses re-opens.
   useEffect(() => {
@@ -110,6 +113,36 @@ export function SearchSheet({ open, onClose, onSelect }: SearchSheetProps) {
           </button>
 
           {locationStatusText && <p className="search-hint">{locationStatusText}</p>}
+
+          {/* Saved cities sit above the browse/search lists. */}
+          {savedCities.length > 0 && (
+            <div aria-label="Saved cities">
+              <p className="search-hint">Saved</p>
+              {savedCities.map((city) => (
+                <div key={city.id} className="search-row-wrap">
+                  <button
+                    type="button"
+                    className="search-row"
+                    onClick={() => onSelect(city)}
+                  >
+                    <span className="search-row__city">{city.city}</span>
+                    <span className="search-row__region">
+                      {city.region ? `${city.region}, ` : ""}
+                      {city.country}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    className="search-row__star search-row__star--remove"
+                    aria-label={`Remove ${city.city} from saved cities`}
+                    onClick={() => removeLocation(city)}
+                  >
+                    −
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
 
           {showBrowse && <PopularCities onSelect={onSelect} />}
 

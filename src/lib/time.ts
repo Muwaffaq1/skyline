@@ -50,6 +50,33 @@ export function sameHour(a: LocalWallTime, b: LocalWallTime): boolean {
   return a.y === b.y && a.mo === b.mo && a.d === b.d && a.h === b.h;
 }
 
+/** True when the two times fall on the same location-local calendar day. */
+export function sameDate(a: LocalWallTime, b: LocalWallTime): boolean {
+  return a.y === b.y && a.mo === b.mo && a.d === b.d;
+}
+
+/**
+ * Stable numeric key for a wall-clock hour (scrub selection). A wall-time key
+ * — not an array index — survives background refetches that shift the hourly
+ * slice start.
+ */
+export function wallKeyOf(t: LocalWallTime): number {
+  return t.y * 1_000_000 + t.mo * 10_000 + t.d * 100 + t.h;
+}
+
+/**
+ * Epoch ms for a location-local wall time, via the same offset shift as
+ * locationNow — never parsed as browser-local.
+ */
+export function wallToEpochMs(t: LocalWallTime, utcOffsetSeconds: number): number {
+  return Date.UTC(t.y, t.mo - 1, t.d, t.h, t.mi) - utcOffsetSeconds * 1000;
+}
+
+/** Minutes since local midnight — handy for sun-event comparisons. */
+export function minutesOfDay(t: LocalWallTime): number {
+  return t.h * 60 + t.mi;
+}
+
 /** "1PM" / "11AM" */
 export function formatHour(t: LocalWallTime): string {
   const hour12 = t.h % 12 === 0 ? 12 : t.h % 12;

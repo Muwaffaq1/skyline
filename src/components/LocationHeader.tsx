@@ -1,19 +1,66 @@
 // Layer 1 — Location. Minimal chrome: the city name is the heading, and the
 // whole row is one ≥44px tap target that opens the search sheet. The pin
 // glyph marks device location, distinguishing Current vs Selected location.
+// A 600ms long-press on the city name opens demo mode (hidden entry point).
 
+import { useEffect, useRef } from "react";
 import type { WeatherLocation } from "../domain/types";
 
 interface LocationHeaderProps {
   location: WeatherLocation;
   loading?: boolean;
   onOpenSearch: () => void;
+  onOpenDemo: () => void;
 }
 
-export function LocationHeader({ location, loading, onOpenSearch }: LocationHeaderProps) {
+const LONG_PRESS_MS = 600;
+const MOVE_CANCEL_PX = 10;
+
+export function LocationHeader({ location, loading, onOpenSearch, onOpenDemo }: LocationHeaderProps) {
+  // Long-press on the city name → demo sheet. Track the down point so a
+  // scroll gesture cancels instead of firing; timer ref survives re-renders.
+  const longPressTimer = useRef<number | null>(null);
+  const downPoint = useRef<{ x: number; y: number } | null>(null);
+
+  const clearLongPress = () => {
+    if (longPressTimer.current !== null) {
+      window.clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+    downPoint.current = null;
+  };
+
+  useEffect(() => clearLongPress, []);
+
+  const startLongPress = (e: React.PointerEvent) => {
+    if (e.button !== 0) return; // primary button / touch / pen only
+    clearLongPress();
+    downPoint.current = { x: e.clientX, y: e.clientY };
+    longPressTimer.current = window.setTimeout(() => {
+      longPressTimer.current = null;
+      downPoint.current = null;
+      onOpenDemo();
+    }, LONG_PRESS_MS);
+  };
+
   return (
     <header className="location-header-wrap">
-      <h1 className="location-header__city">
+      <h1
+        className="location-header__city"
+        onPointerDown={startLongPress}
+        onPointerUp={clearLongPress}
+        onPointerCancel={clearLongPress}
+        onPointerLeave={clearLongPress}
+        onPointerMove={(e) => {
+          const p = downPoint.current;
+          if (p && Math.hypot(e.clientX - p.x, e.clientY - p.y) > MOVE_CANCEL_PX) {
+            clearLongPress();
+          }
+        }}
+        onContextMenu={(e) => {
+          if (longPressTimer.current !== null) e.preventDefault();
+        }}
+      >
         {location.city}
         {location.isDeviceLocation && (
           <svg

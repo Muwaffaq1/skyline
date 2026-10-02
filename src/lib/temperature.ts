@@ -29,3 +29,15 @@ export function defaultUnit(): Unit {
     return "c";
   }
 }
+
+/** Wind is stored in km/h; shown as km/h regardless of °C/°F (simplest honest unit). */
+export function formatWind(kph: number): string {
+  return `${Math.round(kph)} km/h`;
+}
+
+/** UV index with the standard qualitative band. */
+export function formatUv(uv: number): string {
+  const band =
+    uv < 3 ? "Low" : uv < 6 ? "Moderate" : uv < 8 ? "High" : uv < 11 ? "Very high" : "Extreme";
+  return `${Math.round(uv)} (${band})`;
+}

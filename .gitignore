@@ -18,3 +18,8 @@ npm-debug.log*
 .env
 .env.local
 .env.*.local
+.vercel
+
+# Local visual-test scripts + screenshots
+.visual-*.mjs
+shots/

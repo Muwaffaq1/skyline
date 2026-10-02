@@ -14,6 +14,7 @@ import {
 import { fetchRawForecast } from "../api/openMeteo";
 import { locationKeyOf, normalizeForecast } from "../lib/normalize";
 import type { WeatherForecast, WeatherLocation } from "../domain/types";
+import { SCHEMA_VERSION } from "../domain/types";
 import { useSettings } from "../store/settings";
 
 const STALE_MS = 10 * 60_000;
@@ -48,10 +49,11 @@ export function useWeather(location: WeatherLocation | null) {
 
   // Offline first-paint: if the in-memory cache is empty, seed it from the
   // persisted snapshot so a cold start with no network renders instantly.
+  // The schemaVersion guard discards snapshots from older builds mid-migration.
   useEffect(() => {
     if (!key || query.data) return;
     const last = useSettings.getState().lastForecast;
-    if (last && last.locationKey === key) {
+    if (last && last.schemaVersion === SCHEMA_VERSION && last.locationKey === key) {
       queryClient.setQueryData(weatherQueryKey(key), last);
     }
   }, [key, query.data, queryClient]);

@@ -3,7 +3,7 @@
 // prefers-reduced-motion the swap is instant via the animation being disabled.
 
 import { useEffect, useRef, useState } from "react";
-import type { SkyToken } from "../lib/gradient";
+import type { SkyToken } from "../lib/sky";
 
 interface Layer {
   token: SkyToken;

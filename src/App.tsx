@@ -1,25 +1,18 @@
 // App frame: full-bleed atmospheric gradient + the phone column.
-// The sky token comes from the persisted snapshot so the first paint already
-// carries the right atmosphere (cache-first, no flash of the wrong sky).
+// The sky token derives from the persisted snapshot through useSkyToken so
+// the first paint already carries the right atmosphere (cache-first, no
+// flash of the wrong sky) — and stays coherent with scrubbing and demo mode.
 
 import { useEffect, useRef } from "react";
 import { GradientBackground } from "./theme/GradientBackground";
 import { WeatherScreen } from "./screens/WeatherScreen";
-import { useSettings } from "./store/settings";
-import { skyTokenFor, type SkyToken } from "./lib/gradient";
-import { locationNow } from "./lib/time";
+import { ToastStack } from "./components/notifications/ToastStack";
+import { DemoChip } from "./components/demo/DemoChip";
+import { useSkyToken } from "./hooks/useSkyToken";
 
 export default function App() {
-  const lastForecast = useSettings((s) => s.lastForecast);
+  const token = useSkyToken();
   const frameRef = useRef<HTMLDivElement>(null);
-
-  const token: SkyToken = lastForecast?.current
-    ? skyTokenFor(
-        lastForecast.current.condition,
-        lastForecast.current.isDay,
-        locationNow(lastForecast.utcOffsetSeconds).h,
-      )
-    : "cloudy";
 
   // Sync the browser chrome color to the gradient's top stop.
   useEffect(() => {
@@ -32,6 +25,8 @@ export default function App() {
   return (
     <div className="app-frame" data-sky={token} ref={frameRef}>
       <GradientBackground token={token} />
+      <DemoChip />
+      <ToastStack />
       <div className="app-scroll">
         <WeatherScreen />
       </div>

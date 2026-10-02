@@ -50,6 +50,20 @@
   --accent: #ffc9a3;
 }
 
+/* Clear golden hour — warm amber/peach, ±45 min around sunrise/sunset */
+[data-sky="clear-golden"] {
+  --sky-top: #b3543f;
+  --sky-mid: #d97e4e;
+  --sky-bottom: #f2b56b;
+  --on-sky: #ffffff;
+  --on-sky-muted: rgba(255, 255, 255, 0.82);
+  --card-bg: rgba(40, 20, 10, 0.3);
+  --card-border: rgba(255, 255, 255, 0.26);
+  --card-text: #ffffff;
+  --card-text-muted: rgba(255, 255, 255, 0.76);
+  --accent: #ffe9c4;
+}
+
 /* Night — navy gradient (driven by the API's is_day, not OS dark mode) */
 [data-sky="night"] {
   --sky-top: #0b1026;

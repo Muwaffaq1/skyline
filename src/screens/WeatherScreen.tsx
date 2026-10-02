@@ -6,6 +6,7 @@
 //                          DegradedBanner / section RetryRows on top.
 
 import { useState } from "react";
+import { applyDemo } from "../lib/demo";
 import { DegradedBanner, type DegradedReason } from "../components/status/DegradedBanner";
 import { EmptyState } from "../components/status/EmptyState";
 import { RetryRow } from "../components/status/RetryRow";
@@ -17,7 +18,13 @@ import { DailyList } from "../components/daily/DailyList";
 import { UpdatedFooter } from "../components/UpdatedFooter";
 import { UnitToggle } from "../components/UnitToggle";
 import { SearchSheet } from "../components/search/SearchSheet";
+import { DemoSheet } from "../components/demo/DemoSheet";
+import { CityChips } from "../components/cities/CityChips";
+import { SkylineBrief } from "../components/brief/SkylineBrief";
+import { ContextualCard } from "../components/insight/ContextualCard";
+import { evaluateCards } from "../lib/insights/cards";
 import { useWeather } from "../hooks/useWeather";
+import { useNotifications } from "../hooks/useNotifications";
 import { useIsOnline } from "../hooks/useIsOnline";
 import { useSettings } from "../store/settings";
 import { locationNow, formatClock } from "../lib/time";
@@ -31,10 +38,17 @@ export function WeatherScreen() {
   const selectedLocation = useSettings((s) => s.selectedLocation);
   const selectLocation = useSettings((s) => s.selectLocation);
   const markFirstRunDone = useSettings((s) => s.markFirstRunDone);
+  const dismissNotificationsPrompt = useSettings((s) => s.dismissNotificationsPrompt);
+  const demoMode = useSettings((s) => s.demoMode);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [demoOpen, setDemoOpen] = useState(false);
   const isOnline = useIsOnline();
 
   const query = useWeather(selectedLocation);
+  // Raw data for notifications (alerts skip demo); demo-routed data for the
+  // screen, matching useSkyToken so sky and content never diverge.
+  const notifications = useNotifications(query.data ?? null);
+  const data = applyDemo(query.data ?? null, demoMode);
 
   const chooseLocation = (location: WeatherLocation) => {
     selectLocation(location);
@@ -55,8 +69,6 @@ export function WeatherScreen() {
       </>
     );
   }
-
-  const data = query.data;
 
   // ---- Loading with nothing to show ----
   if (!data && query.isPending) {
@@ -97,19 +109,32 @@ export function WeatherScreen() {
     <>
       {bannerReason && <DegradedBanner reason={bannerReason} cachedAtLabel={cachedAtLabel} onRetry={retry} />}
 
-      <LocationHeader location={data.location} loading={query.isFetching} onOpenSearch={openSearch} />
+      <LocationHeader
+        location={data.location}
+        loading={query.isFetching}
+        onOpenSearch={openSearch}
+        onOpenDemo={() => setDemoOpen(true)}
+      />
+
+      <CityChips selected={data.location} />
+
+      <SkylineBrief forecast={data} />
 
       <main>
         {data.current ? (
-          <HeroWeather current={data.current} unit={unit} />
+          <HeroWeather current={data.current} unit={unit} hourly={data.hourly} />
         ) : (
           <RetryRow sectionName="current conditions" onRetry={retry} />
+        )}
+
+        {data.current && (
+          <ContextualCard card={evaluateCards(data)[0]} />
         )}
 
         {data.missingSections.includes("hourly") ? (
           <RetryRow sectionName="hourly" onRetry={retry} />
         ) : (
-          <HourlyStrip hours={data.hourly} unit={unit} />
+          <HourlyStrip hours={data.hourly} unit={unit} daily={data.daily} utcOffsetSeconds={data.utcOffsetSeconds} />
         )}
 
         {data.missingSections.includes("daily") ? (
@@ -124,7 +149,26 @@ export function WeatherScreen() {
         <UnitToggle />
       </div>
 
+      {notifications.optInVisible && (
+        <div className="notification-optin">
+          <span>Get alerts like &ldquo;Rain in about an hour&rdquo;?</span>
+          <span className="notification-optin__actions">
+            <button type="button" className="notification-optin__button" onClick={() => void notifications.enable()}>
+              Enable
+            </button>
+            <button
+              type="button"
+              className="notification-optin__button"
+              onClick={dismissNotificationsPrompt}
+            >
+              Not now
+            </button>
+          </span>
+        </div>
+      )}
+
       <SearchSheet open={searchOpen} onClose={closeSearch} onSelect={chooseLocation} />
+      <DemoSheet open={demoOpen} onClose={() => setDemoOpen(false)} />
     </>
   );
 }

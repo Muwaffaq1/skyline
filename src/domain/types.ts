@@ -55,10 +55,13 @@ export interface CurrentWeather {
 export interface HourlyPoint {
   time: LocalWallTime;
   temperatureC: number | null; // null → cell is skipped (missing-hour edge case)
+  apparentC: number | null; // "feels like" for that hour
   condition: SkylineCondition;
   conditionLabel: string;
   isDay: boolean;
   precipitationProbability: number | null; // null → render nothing, never "0%"
+  uvIndex: number | null; // Open-Meteo hourly uv_index
+  windKph: number | null; // wind_speed_10m, km/h
 }
 
 export interface DailyPoint {
@@ -68,16 +71,34 @@ export interface DailyPoint {
   condition: SkylineCondition;
   conditionLabel: string;
   precipitationProbability: number | null;
+  sunrise: LocalWallTime | null; // null when the daily section omitted it
+  sunset: LocalWallTime | null;
+  uvIndexMax: number | null;
+  windKphMax: number | null;
+  precipSumMm: number | null;
+}
+
+/** Yesterday's hourly temps by location-local hour — feeds the comparison insight. */
+export interface YesterdaySummary {
+  date: LocalWallTime;
+  tempByHour: (number | null)[]; // index 0–23
+  minC: number | null;
+  maxC: number | null;
 }
 
 export type FailedSection = "hourly" | "daily";
 
+/** Bump whenever the persisted snapshot shape changes; see store/settings.ts. */
+export const SCHEMA_VERSION = 2;
+
 export interface WeatherForecast {
+  schemaVersion: number; // guards the persisted snapshot against stale shapes
   locationKey: string; // "lat,lon" at 4dp — also the query cache key
   location: WeatherLocation;
   current: CurrentWeather | null; // null enables partial-response isolation
   hourly: HourlyPoint[]; // ~24 entries starting at the location's "Now" hour
-  daily: DailyPoint[]; // today + next 5
+  daily: DailyPoint[]; // today + next 6 (UI shows 5)
+  yesterday: YesterdaySummary | null; // null when past-hours data is unavailable
   missingSections: FailedSection[];
   utcOffsetSeconds: number;
   fetchedAt: number; // Date.now() at fetch success — drives the refresh policy

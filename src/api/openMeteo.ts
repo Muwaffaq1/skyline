@@ -20,9 +20,12 @@ export interface RawForecast {
   hourly?: {
     time: string[];
     temperature_2m: (number | null)[];
+    apparent_temperature: (number | null)[];
     weather_code: number[];
     precipitation_probability: (number | null)[] | null;
     is_day: number[];
+    uv_index: (number | null)[];
+    wind_speed_10m: (number | null)[];
   } | null;
   daily?: {
     time: string[];
@@ -31,6 +34,10 @@ export interface RawForecast {
     temperature_2m_min: number[];
     precipitation_probability_max: (number | null)[] | null;
     precipitation_sum: number[];
+    sunrise: string[];
+    sunset: string[];
+    uv_index_max: (number | null)[];
+    wind_speed_10m_max: (number | null)[];
   } | null;
 }
 
@@ -39,11 +46,13 @@ export async function fetchRawForecast(location: WeatherLocation): Promise<RawFo
     latitude: String(location.latitude),
     longitude: String(location.longitude),
     current: "temperature_2m,apparent_temperature,is_day,weather_code",
-    hourly: "temperature_2m,weather_code,precipitation_probability,is_day",
+    hourly:
+      "temperature_2m,apparent_temperature,weather_code,precipitation_probability,is_day,uv_index,wind_speed_10m",
     daily:
-      "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum",
+      "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,sunrise,sunset,uv_index_max,wind_speed_10m_max",
     timezone: "auto",
-    forecast_days: "6",
+    forecast_days: "7",
+    past_days: "1", // yesterday, for the comparison insight
   });
 
   const res = await fetch(`${FORECAST_URL}?${params.toString()}`);
